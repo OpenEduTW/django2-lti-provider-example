@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
-import os,pymysql
+import os, pymysql
 
 pymysql.install_as_MySQLdb()
 
@@ -24,11 +24,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '8^66oxt=44+*hb+nnnkt9lckf1_y0z4l=worutx&9@ajhl-19e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False # local_settings
+DEBUG = False  # local_settings
 
-DOMAIN_NAME = '' # local_settings
+DOMAIN_NAME = ''  # local_settings
 
-ALLOWED_HOSTS = ['127.0.0.1'] # local_settings
+ALLOWED_HOSTS = ['127.0.0.1']  # local_settings
 
 # Application definition
 
@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'webapp',
+    'lti_provider',
+    'bootstrap3',
 ]
 
 MIDDLEWARE = [
@@ -75,7 +77,7 @@ WSGI_APPLICATION = 'MyProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASES = { # local_settings
+DATABASES = {  # local_settings
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': '<database>',  # Or path to database file if using sqlite3.
@@ -114,7 +116,7 @@ TIME_ZONE = 'Asia/Taipei'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
- 
+
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_DIRS = [
@@ -124,14 +126,50 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesSto
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-LOGGING_FOLDER = '' # local_settings
+LOGGING_FOLDER = ''  # local_settings
 
-TEST_SITE = False # local_settings
+TEST_SITE = False  # local_settings
 
-VIRTUALENV_PATH = '' # local_settings
+VIRTUALENV_PATH = ''  # local_settings
+
+# LTI
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'lti_provider.auth.LTIBackend',
+]
+
+LTI_TOOL_CONFIGURATION = {
+    'title': 'Sample LTI Tool',
+    'description': 'This tool includes launch, navigation and assignments',
+    'launch_url': 'lti/',
+    'embed_url': '',
+    'embed_icon_url': '',
+    'embed_tool_id': '',
+    'landing_url': '/assignment/1/',
+    'navigation': True,
+    'new_tab': False,
+    'course_aware': False,
+    'frame_width': 1024,
+    'frame_height': 1024,
+    'assignments': {
+        '1': '/assignment/1/',
+    }
+}
+
+PYLTI_CONFIG = {
+    'consumers': {
+        '<random number string>': {
+            'secret': '<random number string>'
+        }
+    }
+}
+
+X_FRAME_OPTIONS = 'ALLOW-FROM <domain>'
+
+SESSION_COOKIE_SAMESITE = None
 
 try:
-   from .local_settings import *
+    from .local_settings import *
 except ImportError:
     raise Exception("A local_settings.py file is required to run this project")
 
@@ -140,8 +178,8 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
-            'datefmt' : "%d/%b/%Y %H:%M:%S"
+            'format': "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt': "%d/%b/%Y %H:%M:%S"
         },
         'simple': {
             'format': '%(levelname)s %(message)s'
@@ -151,69 +189,60 @@ LOGGING = {
         'default': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-                'filename': LOGGING_FOLDER+'/default.log',
-            'maxBytes':1024*1024*5, #文件大小
-            'backupCount': 0, #備份份數
+            'filename': LOGGING_FOLDER + '/default.log',
+            'maxBytes': 1024 * 1024 * 5,  # 文件大小
+            'backupCount': 0,  # 備份份數
             'formatter': 'verbose'
         },
         'request': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': LOGGING_FOLDER+'/request.log',
-            'maxBytes':1024*1024*5, #文件大小
-            'backupCount': 5, #備份份數
+            'filename': LOGGING_FOLDER + '/request.log',
+            'maxBytes': 1024 * 1024 * 5,  # 文件大小
+            'backupCount': 5,  # 備份份數
             'formatter': 'verbose'
         },
         'db': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': LOGGING_FOLDER+'/db.log',
-            'maxBytes':1024*1024*5, #文件大小
-            'backupCount': 1, #備份份數
+            'filename': LOGGING_FOLDER + '/db.log',
+            'maxBytes': 1024 * 1024 * 5,  # 文件大小
+            'backupCount': 1,  # 備份份數
             'formatter': 'verbose'
         },
         'template': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': LOGGING_FOLDER+'/template.log',
-            'maxBytes':1024*1024*5, #文件大小
-            'backupCount': 1, #備份份數
+            'filename': LOGGING_FOLDER + '/template.log',
+            'maxBytes': 1024 * 1024 * 5,  # 文件大小
+            'backupCount': 1,  # 備份份數
             'formatter': 'verbose'
         },
         'debug': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': LOGGING_FOLDER+'/debug.log',
-            'maxBytes':1024*1024*5, #文件大小
-            'backupCount': 5, #備份份數
+            'filename': LOGGING_FOLDER + '/debug.log',
+            'maxBytes': 1024 * 1024 * 5,  # 文件大小
+            'backupCount': 5,  # 備份份數
             'formatter': 'verbose',
-            'encoding':'utf-8',
-        },
-        'redirect': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': LOGGING_FOLDER+'/redirect.log',
-            'maxBytes':1024*1024*5, #文件大小
-            'backupCount': 5, #備份份數
-            'formatter': 'verbose',
-            'encoding':'utf-8',
+            'encoding': 'utf-8',
         },
     },
     'loggers': {
         'django': {
-            'handlers':['default'],
+            'handlers': ['default'],
             'propagate': False,
-            'level':'DEBUG',
+            'level': 'DEBUG',
         },
         'django.request': {
-            'handlers':['request'],
+            'handlers': ['request'],
             'propagate': False,
-            'level':'DEBUG',
+            'level': 'DEBUG',
         },
         'django.db': {
-            'handlers':['db'],
+            'handlers': ['db'],
             'propagate': False,
-            'level':'DEBUG',
+            'level': 'DEBUG',
         },
         'django.template': {
             'handlers': ['template'],
@@ -221,14 +250,14 @@ LOGGING = {
             'level': 'DEBUG',
         },
         'debug': {
-            'handlers':['debug'],
+            'handlers': ['debug'],
             'propagate': False,
-            'level':'DEBUG',
+            'level': 'DEBUG',
         },
-        'redirect': {
-            'handlers':['redirect'],
+        'pylti': {
+            'handlers': ['debug'],
             'propagate': False,
-            'level':'DEBUG',
+            'level': 'DEBUG',
         },
     }
 }

@@ -1,40 +1,27 @@
-# django 
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate
-from django.contrib import auth
-from django.http import JsonResponse
-from django.http import HttpResponseRedirect
-from django.http import StreamingHttpResponse
-from django.core.paginator import Paginator
-from django.core.paginator import EmptyPage
-from django.core.paginator import PageNotAnInteger
-from webapp import forms
+from django.shortcuts import render
+from django.views.generic.base import TemplateView
+from lti_provider.mixins import LTIAuthMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.template.context_processors import csrf
+import logging
 
-#  _                 _         _____                 
-# | |               (_)       |  __ \                
-# | |     ___   __ _ _ _ __   | |__) |_ _  __ _  ___ 
-# | |    / _ \ / _` | | '_ \  |  ___/ _` |/ _` |/ _ \
-# | |___| (_) | (_| | | | | | | |  | (_| | (_| |  __/
-# |______\___/ \__, |_|_| |_| |_|   \__,_|\__, |\___|
-#               __/ |                      __/ |     
-#              |___/                      |___/      
-######################################################
+logger = logging.getLogger('debug')
+
+
 def index(request):
-	if request.method == "POST":
-		postform = forms.LoginPostForm(request.POST)
-		if postform.is_valid():
-			username = postform.cleaned_data['username']
-			pd = postform.cleaned_data['pd']
-			user1 = authenticate(username=username, password= pd)
-			if user1 is not None:
-				auth.login(request, user1)
-				postform= forms.LoginPostForm()
-				return redirect('/')
-			else:
-				message = '登入失敗!'
-		else:
-			message='驗證碼錯誤'
-	else:
-		message = '帳號,密碼及驗證碼都必須輸入!'
-		postform = forms.LoginPostForm()
-	return render(request, "index.html", locals())
+    return render(request, "main/index.html", locals())
+
+
+class LTIAssignment1View(LTIAuthMixin, LoginRequiredMixin, TemplateView):
+    template_name = 'main/assignment.html'
+
+    def get_context_data(self, **kwargs):
+        return {
+            'is_student': self.lti.lis_result_sourcedid(self.request),
+            'course_title': self.lti.course_title(self.request),
+            'number': 1,
+        }
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        context.update(csrf(request))
+        return render(request,self.template_name,context=context)
