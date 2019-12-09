@@ -167,6 +167,7 @@ PYLTI_CONFIG = {
 X_FRAME_OPTIONS = 'ALLOW-FROM <domain>'
 
 SESSION_COOKIE_SAMESITE = None
+CSRF_COOKIE_SAMESITE = None
 
 try:
     from .local_settings import *
