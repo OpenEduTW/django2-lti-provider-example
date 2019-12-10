@@ -158,16 +158,15 @@ LTI_TOOL_CONFIGURATION = {
 
 PYLTI_CONFIG = {
     'consumers': {
-        '<random number string>': {
-            'secret': '<random number string>'
+        '<random number string>': {  # key
+            'secret': '<random number string>'  # secret
         }
     }
 }
 
-X_FRAME_OPTIONS = 'ALLOW-FROM <domain>'
-
-SESSION_COOKIE_SAMESITE = None
-CSRF_COOKIE_SAMESITE = None
+X_FRAME_OPTIONS = 'ALLOW-FROM <domain>'  # 解決拒絕連線問題
+SESSION_COOKIE_SAMESITE = None  # Authentication Failed問題
+CSRF_COOKIE_SAMESITE = None  # 解決CSRF驗證問題
 
 try:
     from .local_settings import *
@@ -255,10 +254,10 @@ LOGGING = {
             'propagate': False,
             'level': 'DEBUG',
         },
-        'pylti': {
-            'handlers': ['debug'],
-            'propagate': False,
-            'level': 'DEBUG',
-        },
+        # 'pylti': {
+        #     'handlers': ['debug'],
+        #     'propagate': False,
+        #     'level': 'DEBUG',
+        # },
     }
 }

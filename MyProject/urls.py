@@ -19,8 +19,8 @@ from webapp import views as webapp
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', webapp.index, name='/'),
     path('lti/', include('lti_provider.urls')),
+    path('', webapp.index, name='/'),
     path('assignment/1/', webapp.LTIAssignment1View.as_view()),
     path('assignment/success/', webapp.TemplateView.as_view(
         template_name='main/assignment_success.html'),
