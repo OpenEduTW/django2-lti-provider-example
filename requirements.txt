@@ -1,0 +1,11 @@
+Django==2.1.14
+django-bootstrap3==11.1.0
+django-lti-provider==0.3.3
+httplib2==0.14.0
+nameparser==1.0.4
+oauth2==1.9.0.post1
+oauthlib==3.1.0
+PyLTI==0.7.0
+PyMySQL==0.9.3
+pytz==2019.3
+six==1.13.0
