@@ -1,7 +1,7 @@
 Django==2.2.18
 django-bootstrap3==11.1.0
 django-lti-provider==0.3.3
-httplib2==0.18.0
+httplib2==0.19.0
 nameparser==1.0.4
 oauth2==1.9.0.post1
 oauthlib==3.1.0
